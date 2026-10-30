@@ -1,6 +1,6 @@
 
 import { useEffect, useRef } from "react";
-import backgroundAudio from '/audio/backgroundAudio.mp3'
+import backgroundAudio from "/public/audio/backgroundAudio.mp3"
 
 export default function BackgroundAudio() {
     const audioRef = useRef(null);

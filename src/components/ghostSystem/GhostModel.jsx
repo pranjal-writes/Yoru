@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import ghostLaugh from "/audio/ghostLaugh.mp3"
+import ghostLaugh from "/public/audio/ghostLaugh.mp3"
 
 export default function GhostModel({
     isHovered = false,

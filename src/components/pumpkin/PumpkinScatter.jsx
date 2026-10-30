@@ -3,7 +3,7 @@ import { useMemo, useRef, useState, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
-import iSeeYou from "/audio/iSeeYou.mp3"
+import iSeeYou from "/public/audio/iSeeYou.mp3"
 
 const FACE_OFFSET = -15 * (Math.PI / 180);
 const MIN_DISTANCE = 2.5;
