@@ -49,10 +49,10 @@ export default function Background() {
                     label: "Sparkle Color",
                 },
                 sparkleCount: {
-                    value: 350,
+                    value: 300,
                     min: 0,
-                    max: 1000,
-                    step: 10,
+                    max: 400,
+                    step: 5,
                     label: "Sparkle Count",
                 },
                 sparkleSize: {
