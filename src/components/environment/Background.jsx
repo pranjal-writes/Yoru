@@ -1,28 +1,81 @@
 "use client";
+
 import React, { useRef } from "react";
 import { Bloom, EffectComposer, GodRays } from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
 import { Sparkles, Stars } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
+import { useControls } from "leva";
 
-function Sun(props) {
-    const ref = useRef();
-
+function Moon({ color, ...props }) {
     return (
-        <mesh ref={ref} {...props}>
+        <mesh {...props}>
             <sphereGeometry args={[1, 32, 32]} />
-            <meshBasicMaterial color="#356C70" fog={false} />
+            <meshBasicMaterial color={color} fog={false} />
         </mesh>
     );
 }
 
 export default function Background() {
-    const sunRef = useRef();
-
+    const moonRef = useRef();
     const dirLight = useRef();
-    useFrame((state, delta) => {
-        if (sunRef.current && dirLight.current) {
-            dirLight.current.position.copy(sunRef.current.position);
+
+    // Moon controls
+    const { moonColor, moonIntensity } = useControls(
+        "Moon Settings",
+        {
+            moonColor: {
+                value: "#356C70",
+                label: "Moon Color",
+            },
+            moonIntensity: {
+                value: 3,
+                min: 0,
+                max: 10,
+                step: 0.1,
+                label: "Moon Light Intensity",
+            },
+        },
+        { collapsed: true },
+    );
+
+    // Sparkles controls
+    const { sparkleColor, sparkleCount, sparkleSize, sparkleSpeed } =
+        useControls(
+            "Sparkles Settings",
+            {
+                sparkleColor: {
+                    value: "orange",
+                    label: "Sparkle Color",
+                },
+                sparkleCount: {
+                    value: 350,
+                    min: 0,
+                    max: 1000,
+                    step: 10,
+                    label: "Sparkle Count",
+                },
+                sparkleSize: {
+                    value: 3,
+                    min: 0,
+                    max: 10,
+                    step: 0.1,
+                    label: "Sparkle Size",
+                },
+                sparkleSpeed: {
+                    value: 0.65,
+                    min: 0,
+                    max: 5,
+                    step: 0.05,
+                    label: "Sparkle Speed",
+                },
+            },
+            { collapsed: true },
+        );
+
+    useFrame(() => {
+        if (moonRef.current && dirLight.current) {
+            dirLight.current.position.copy(moonRef.current.position);
         }
     });
 
@@ -32,15 +85,21 @@ export default function Background() {
 
             <directionalLight
                 ref={dirLight}
-                color="#356C70"
+                color={moonColor}
                 position={[-10, 15, -5]}
-                intensity={3}
+                intensity={moonIntensity}
                 scale={1}
                 castShadow
                 shadow-mapSize={[1024, 1024]}
             />
 
-            <Sun ref={sunRef} position={[70, 70, -120]} scale={[5, 5, 5]} />
+            <Moon
+                ref={moonRef}
+                position={[70, 70, -120]}
+                scale={[5, 5, 5]}
+                color={moonColor}
+            />
+
             <Stars
                 radius={100}
                 depth={50}
@@ -53,21 +112,18 @@ export default function Background() {
 
             <Sparkles
                 position={[0, 5, 0]}
-                count={350}
+                count={sparkleCount}
                 scale={[50, 50, 50]}
-                size={3}
-                speed={0.65}
-                color="orange"
+                size={sparkleSize}
+                speed={sparkleSpeed}
+                color={sparkleColor}
             />
 
             <EffectComposer autoClear={false}>
-                <Bloom
-                    mipmapBlur
-                    luminanceThreshold={1} // Only things brighter than 1 will glow
-                    intensity={1.4} // The strength of the glow
-                />
+                <Bloom mipmapBlur luminanceThreshold={1} intensity={1.4} />
+
                 <GodRays
-                    sun={sunRef}
+                    sun={moonRef}
                     blendFunction={BlendFunction.Screen}
                     samples={60}
                     density={0.96}

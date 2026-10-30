@@ -3,7 +3,7 @@ import { useMemo, useRef, useState, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
-import iSeeYou from "/public/audio/iSeeYou.mp3"
+import { useControls } from "leva";
 
 const FACE_OFFSET = -15 * (Math.PI / 180);
 const MIN_DISTANCE = 2.5;
@@ -21,6 +21,21 @@ export function PumpkinScatter({ count = 20 }) {
 
     const audioRef = useRef(null);
     const [hoveredId, setHoveredId] = useState(null);
+
+    // Leva controls
+    const { faceColor, faceGlow } = useControls("Pumpkin Settings", {
+        faceColor: {
+            value: "#FFA500",
+            label: "Face Color",
+        },
+        faceGlow: {
+            value: 4,
+            min: 0,
+            max: 20,
+            step: 0.1,
+            label: "Face Glow",
+        },
+    }, { collapsed: true });
 
     useEffect(() => {
         return () => {
@@ -62,7 +77,11 @@ export function PumpkinScatter({ count = 20 }) {
             if (!position) continue;
 
             const scale = THREE.MathUtils.randFloat(0.4, 0.7);
-            const rotation = new THREE.Euler(0, Math.random() * Math.PI * 2, 0);
+            const rotation = new THREE.Euler(
+                0,
+                Math.random() * Math.PI * 2,
+                0
+            );
             const quaternion = new THREE.Quaternion().setFromEuler(rotation);
 
             positions.push({
@@ -90,11 +109,18 @@ export function PumpkinScatter({ count = 20 }) {
     const faceMaterial = useMemo(
         () =>
             new THREE.MeshStandardMaterial({
-                emissive: "orange",
+                emissive: "#FFA500",
                 emissiveIntensity: 4,
             }),
         [],
     );
+
+    // Update face material from Leva
+    useEffect(() => {
+        faceMaterial.color.set(faceColor);
+        faceMaterial.emissive.set(faceColor);
+        faceMaterial.emissiveIntensity = faceGlow;
+    }, [faceColor, faceGlow, faceMaterial]);
 
     const faceLocalMatrix = useMemo(() => {
         return new THREE.Matrix4().compose(
@@ -215,7 +241,7 @@ export function PumpkinScatter({ count = 20 }) {
 
         // Create audio only on the first pumpkin click.
         if (!audio) {
-            audio = new Audio(iSeeYou);
+            audio = new Audio("/audio/iSeeYou.mp3");
             audio.volume = 0.2;
             audio.preload = "auto";
             audioRef.current = audio;

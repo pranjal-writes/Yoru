@@ -1,9 +1,32 @@
 import React, { useRef } from "react";
 import { useGLTF, useHelper } from "@react-three/drei";
 import { PointLightHelper, SpotLightHelper } from "three";
+import { useControls } from "leva";
 
 export function Emission(props) {
     const { nodes, materials } = useGLTF("/emission.glb");
+
+    const { color, colorIntensity, poleGlassColor, poleGlassIntensity } =
+        useControls(
+            "Pole lights",
+            {
+                color: "#EB6123",
+                colorIntensity: { value: 4, min: 0, max: 100, step: 0.5 },
+                poleGlassColor: "#FFB25A",
+                poleGlassIntensity: { value: 5, min: 0, max: 100, step: 0.5 },
+            },
+            { collapsed: true },
+        );
+
+    const { color: colorWindows, colorIntensity: colorIntensityWindows } =
+        useControls(
+            "windows lights",
+            {
+                color: "#FFB25A",
+                colorIntensity: { value: 4, min: 0, max: 100, step: 0.5 },
+            },
+            { collapsed: true },
+        );
 
     return (
         <group {...props} dispose={null}>
@@ -18,25 +41,24 @@ export function Emission(props) {
             >
                 <meshStandardMaterial
                     attach="material"
-                    color="#FFB25A"
-                    emissive="#FFB25A"
-                    emissiveIntensity={5}
+                    emissive={poleGlassColor}
+                    emissiveIntensity={poleGlassIntensity}
                 />
             </mesh>
             <pointLight
                 position={[7.5, 1.2, -6.75]}
-                intensity={4}
-                color="#EB6123"
+                intensity={colorIntensity}
+                color={color}
             />
             <pointLight
                 position={[-12.3, 1.2, -6.75]}
-                intensity={4}
-                color="#EB6123"
+                intensity={colorIntensity}
+                color={color}
             />
             <pointLight
                 position={[-2, 1.5, 4.35]}
-                intensity={4}
-                color="#EB6123"
+                intensity={colorIntensity}
+                color={color}
             />
 
             <mesh
@@ -49,9 +71,8 @@ export function Emission(props) {
             >
                 <meshStandardMaterial
                     attach="material"
-                    color="#FFB25A"
-                    emissive="#FFB25A"
-                    emissiveIntensity={4}
+                    emissive={colorWindows}
+                    emissiveIntensity={colorIntensityWindows}
                 />
             </mesh>
             <mesh
@@ -65,9 +86,8 @@ export function Emission(props) {
             >
                 <meshStandardMaterial
                     attach="material"
-                    color="#FFB25A"
-                    emissive="#FFB25A"
-                    emissiveIntensity={4}
+                    emissive={colorWindows}
+                    emissiveIntensity={colorIntensityWindows}
                 />
             </mesh>
             <mesh
@@ -81,9 +101,8 @@ export function Emission(props) {
             >
                 <meshStandardMaterial
                     attach="material"
-                    color="#FFB25A"
-                    emissive="#FFB25A"
-                    emissiveIntensity={4}
+                    emissive={colorWindows}
+                    emissiveIntensity={colorIntensityWindows}
                 />
             </mesh>
             <mesh
@@ -97,9 +116,8 @@ export function Emission(props) {
             >
                 <meshStandardMaterial
                     attach="material"
-                    color="#FFB25A"
-                    emissive="#FFB25A"
-                    emissiveIntensity={4}
+                    emissive={colorWindows}
+                    emissiveIntensity={colorIntensityWindows}
                 />
             </mesh>
             <mesh
@@ -113,15 +131,14 @@ export function Emission(props) {
             >
                 <meshStandardMaterial
                     attach="material"
-                    color="#FFB25A"
-                    emissive="#FFB25A"
-                    emissiveIntensity={5}
+                    emissive={poleGlassColor}
+                    emissiveIntensity={poleGlassIntensity}
                 />
             </mesh>
             <pointLight
                 position={[7.53, 1.6, 14.296]}
-                intensity={4}
-                color="#EB6123"
+                intensity={colorIntensity}
+                color={color}
             />
 
             <mesh
@@ -135,15 +152,14 @@ export function Emission(props) {
             >
                 <meshStandardMaterial
                     attach="material"
-                    color="#FFB25A"
-                    emissive="#FFB25A"
-                    emissiveIntensity={5}
+                    emissive={poleGlassColor}
+                    emissiveIntensity={poleGlassIntensity}
                 />
             </mesh>
             <pointLight
                 position={[-5.2, 1.8, 12.7]}
-                intensity={4}
-                color="#EB6123"
+                intensity={colorIntensity}
+                color={color}
             />
 
             <mesh
@@ -157,15 +173,14 @@ export function Emission(props) {
             >
                 <meshStandardMaterial
                     attach="material"
-                    color="#FFB25A"
-                    emissive="#FFB25A"
-                    emissiveIntensity={5}
+                    emissive={poleGlassColor}
+                    emissiveIntensity={poleGlassIntensity}
                 />
             </mesh>
             <pointLight
                 position={[-12.38, 1.6, 14.296]}
-                intensity={4}
-                color="#EB6123"
+                intensity={colorIntensity}
+                color={color}
             />
             <mesh
                 castShadow
@@ -178,15 +193,14 @@ export function Emission(props) {
             >
                 <meshStandardMaterial
                     attach="material"
-                    color="#FFB25A"
-                    emissive="#FFB25A"
-                    emissiveIntensity={5}
+                    emissive={poleGlassColor}
+                    emissiveIntensity={poleGlassIntensity}
                 />
             </mesh>
             <pointLight
                 position={[3.65, 1.8, 12.7]}
-                intensity={4}
-                color="#EB6123"
+                intensity={colorIntensity}
+                color={color}
             />
         </group>
     );

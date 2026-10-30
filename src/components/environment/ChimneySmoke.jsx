@@ -1,5 +1,6 @@
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useRef, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
+import { useControls } from "leva";
 import * as THREE from "three";
 
 const PARTICLE_COUNT = 8;
@@ -10,6 +11,18 @@ const START_POSITION = [-1.8, 5.65, -2.45];
 export default function ChimneySmoke() {
     const particles = useRef([]);
     const elapsed = useRef(0);
+
+    // Leva control
+    const { smokeColor } = useControls(
+        "Smoke Settings",
+        {
+            smokeColor: {
+                value: "#A9B8C8",
+                label: "Smoke Color",
+            },
+        },
+        { collapsed: true },
+    );
 
     // Create one soft, cloudy texture and reuse it.
     const smokeTexture = useMemo(() => {
@@ -35,8 +48,7 @@ export default function ChimneySmoke() {
         return texture;
     }, []);
 
-    // Each particle gets its own material so its opacity
-    // can change independently.
+    // Each particle gets its own material.
     const materials = useMemo(
         () =>
             Array.from({ length: PARTICLE_COUNT }, () => {
@@ -51,14 +63,20 @@ export default function ChimneySmoke() {
         [smokeTexture],
     );
 
+    // Update all particle colors when the Leva control changes.
+    useEffect(() => {
+        materials.forEach((material) => {
+            material.color.set(smokeColor);
+        });
+    }, [smokeColor, materials]);
+
     useFrame((_, delta) => {
         elapsed.current += delta;
 
         particles.current.forEach((particle, index) => {
             if (!particle) return;
 
-            // Offset each particle in time so the plume
-            // doesn't move as one synchronized group.
+            // Offset each particle in time.
             const phase = index / PARTICLE_COUNT;
             const progress = (elapsed.current / LIFETIME + phase) % 1;
 
@@ -77,7 +95,7 @@ export default function ChimneySmoke() {
             const scale = 0.16 + progress * 5;
             particle.scale.setScalar(scale);
 
-            // Fade in at the beginning and fade out at the end.
+            // Fade in and out.
             const fadeIn = Math.min(progress / 0.15, 1);
             const fadeOut = Math.min((1 - progress) / 0.3, 1);
 

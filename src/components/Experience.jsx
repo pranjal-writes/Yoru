@@ -26,34 +26,38 @@ export default function Experience() {
     function CameraController({ controlsRef }) {
         const { camera } = useThree();
 
-        useControls("Camera", {
-            position: {
-                value: [-15.5, 6.0, 18.0],
-                step: 0.1,
-                onChange: (v) => {
-                    // 1. Update the camera position
-                    camera.position.set(v[0], v[1], v[2]);
+        useControls(
+            "Camera",
+            {
+                position: {
+                    value: [-15.5, 6.0, 18.0],
+                    step: 0.1,
+                    onChange: (v) => {
+                        // 1. Update the camera position
+                        camera.position.set(v[0], v[1], v[2]);
 
-                    // 2. Synchronize OrbitControls internal state
-                    if (controlsRef.current) {
-                        controlsRef.current.update();
-                    }
+                        // 2. Synchronize OrbitControls internal state
+                        if (controlsRef.current) {
+                            controlsRef.current.update();
+                        }
+                    },
+                },
+                lookAtTarget: {
+                    value: [-3.5, -0.1, 0],
+                    step: 0.1,
+                    onChange: (v) => {
+                        // 1. Update the focal point OrbitControls orbits around
+                        if (controlsRef.current) {
+                            controlsRef.current.target.set(v[0], v[1], v[2]);
+                            controlsRef.current.update();
+                        } else {
+                            camera.lookAt(v[0], v[1], v[2]);
+                        }
+                    },
                 },
             },
-            lookAtTarget: {
-                value: [-3.5, -0.1, 0],
-                step: 0.1,
-                onChange: (v) => {
-                    // 1. Update the focal point OrbitControls orbits around
-                    if (controlsRef.current) {
-                        controlsRef.current.target.set(v[0], v[1], v[2]);
-                        controlsRef.current.update();
-                    } else {
-                        camera.lookAt(v[0], v[1], v[2]);
-                    }
-                },
-            },
-        });
+            { collapsed: true },
+        );
 
         return null;
     }
