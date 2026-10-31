@@ -15,7 +15,6 @@ export default function GhostModel({
     const { nodes, materials } = useGLTF("/ghost.glb");
 
     const ghostRef = useRef();
-    console.log(ghostRef.current)
     const audioRef = useRef(null);
 
     const touchTimer = useRef(0);
