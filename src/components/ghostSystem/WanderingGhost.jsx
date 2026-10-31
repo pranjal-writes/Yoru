@@ -114,6 +114,7 @@ export default function WanderingGhost({
                     isHovered={isHovered}
                     onPointerOver={() => setIsHovered(true)}
                     onPointerOut={() => setIsHovered(false)}
+                    scaleOnHover={false}
                 />
             </group>
         </group>

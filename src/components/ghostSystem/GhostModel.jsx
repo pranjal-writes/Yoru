@@ -15,6 +15,7 @@ export default function GhostModel({
     const { nodes, materials } = useGLTF("/ghost.glb");
 
     const ghostRef = useRef();
+    console.log(ghostRef.current)
     const audioRef = useRef(null);
 
     const touchTimer = useRef(0);
@@ -127,8 +128,8 @@ export default function GhostModel({
             4,
             delta,
         );
-
-        ghostRef.current.scale.setScalar(currentScale);
+        
+         ghostRef.current.scale.setScalar(currentScale);
 
         // Ghost body color and glow
         const targetColor = activeHover ? ghostHoverColor : ghostColor;
